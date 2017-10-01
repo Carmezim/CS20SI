@@ -26,13 +26,13 @@ n_samples = sheet.nrows - 1
 
 # Step 2: create placeholders for input X (number of fire) and label Y (number of theft)
 # Both have the type float32
-X = tf.placeholder(tf.float32, shape=None, name='X')
-Y = tf.placeholder(tf.float32, shape=None, name='Y')
+X = tf.placeholder(tf.float32, name='X')
+Y = tf.placeholder(tf.float32, name='Y')
 
 # Step 3: create weight and bias, initialized to 0
 # name your variables w and b
-w = tf.Variable(initial_value=0.0, trainable=True, name='weights', dtype=tf.float32)
-b = tf.Variable(initial_value=0.0, trainable=True, name='bias', dtype=tf.float32)
+w = tf.Variable(initial_value=0.0, name='weights')
+b = tf.Variable(initial_value=0.0, name='bias')
 
 # Step 4: predict Y (number of theft) from the number of fire
 # name your variable Y_predicted
@@ -43,7 +43,7 @@ Y_predicted = X * w + b
 loss = tf.square(Y - Y_predicted, name='loss')
 
 # Step 6: using gradient descent with learning rate of 0.01 to minimize loss
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(loss)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
 
 # Phase 2: Train our model
 with tf.Session() as sess:
@@ -55,7 +55,7 @@ with tf.Session() as sess:
         total_loss = 0
         for x, y in data:
 			# Session runs optimizer to minimize loss and fetch the value of loss. Name the received value as l
-            _,  l = sess.run([optimizer, loss], feed_dict={X: x, Y: y})
+            _, l = sess.run([optimizer, loss], feed_dict={X: x, Y: y})
             total_loss += l
         print("Epoch {0}: {1}".format(i, total_loss/n_samples))
 
