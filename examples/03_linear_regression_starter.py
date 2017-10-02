@@ -40,10 +40,21 @@ Y_predicted = X * w + b
 
 # Step 5: use the square error as the loss function
 # name your variable loss
-loss = tf.square(Y - Y_predicted, name='loss')
+# loss = tf.square(Y - Y_predicted, name='loss')
+
+# Huber loss
+def huber_loss(labels, predictions, delta=0.1):
+    residual = tf.abs(predictions - labels) # (y - f(x))
+    condition = tf.less(residual, delta) # for |y - f(x)| <= delta
+    small_res = 0.5 * tf.square(residual) # if the difference is smaller than or equal to delta (really small value), square it
+    # else  delta * |y - f(x)| - delta^2/2
+    large_res = delta * residual - 0.5 * tf.square(delta)
+    return tf.where(condition, small_res, large_res)
+
+hub_loss = huber_loss(Y, Y_predicted)
 
 # Step 6: using gradient descent with learning rate of 0.01 to minimize loss
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(hub_loss)
 
 # Phase 2: Train our model
 with tf.Session() as sess:
@@ -51,11 +62,11 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     writer = tf.summary.FileWriter('./my_graph/03/linear_reg', sess.graph)
     # Step 8: train the model
-    for i in range(50): # run 100 epochs
+    for i in range(100): # run 100 epochs
         total_loss = 0
         for x, y in data:
 			# Session runs optimizer to minimize loss and fetch the value of loss. Name the received value as l
-            _, l = sess.run([optimizer, loss], feed_dict={X: x, Y: y})
+            _, l = sess.run([optimizer, hub_loss], feed_dict={X: x, Y: y})
             total_loss += l
         print("Epoch {0}: {1}".format(i, total_loss/n_samples))
 
