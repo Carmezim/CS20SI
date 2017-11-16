@@ -32,11 +32,11 @@ def _get_heart_dataset():
   return path
 
 
-def dataset(y_name="price", train_fraction=0.7):
+def dataset(y_name="chd", train_fraction=0.7):
   """Load the imports85 data as a (train,test) pair of `Dataset`.
   Each dataset generates (features_dict, label) pairs.
   Args:
-    y_name: The name of the column to use as the label.
+    y_name: The name of the column   to use as the label.
     train_fraction: A float, the fraction of data to use for training. The
         remainder will be used for evaluation.
   Returns:
@@ -121,7 +121,7 @@ def raw_dataframe():
   return df
 
 
-def load_data(y_name="price", train_fraction=0.7, seed=None):
+def load_data(y_name="chd", train_fraction=0.7, seed=None):
   """Get the imports85 data set.
   A description of the data is available at:
     https://archive.ics.uci.edu/ml/datasets/automobile
