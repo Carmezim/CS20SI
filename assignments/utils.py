@@ -2,14 +2,13 @@ import pandas as pd
 import numpy as np
 import os
 
-class data_preprocess:
+class data_process:
 
     def read_data(file_path, delimiter=';'):
         # try:
         #     os.path.exists(file_path)
         # except OSError:
         #     pass
-        print(file_path)
         data = pd.read_csv(str(file_path), delimiter=delimiter, header=0)
         return data
 
@@ -41,8 +40,12 @@ class data_preprocess:
 
         return train_X, train_Y, test_X, test_Y, features, labels
 
-
-
     def check_data_sample(data):
         print(data.head())
 
+    def make_dir(path):
+        """ Create a directory if there isn't one already. """
+        try:
+            os.mkdir(path)
+        except OSError:
+            pass

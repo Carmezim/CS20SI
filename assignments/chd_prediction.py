@@ -9,9 +9,9 @@ CATEGORICAL_COLUMN = "famhist"
 
 # hyperparameters
 n_features = 9
-learning_rate = 0.01
-epochs = 2000
-n_hidden = 6
+learning_rate = 0.00015
+epochs = 850
+n_hidden = 5
 n_labels = 2
 
 # data processing
@@ -29,7 +29,7 @@ columns = [ "sbp",
 
 data = data_preprocess.scale_data(data, columns)
 
-train_X, train_Y, test_X, test_Y, features, labels = data_preprocess.split_data(data)
+train_X, train_Y, test_X, test_Y, features, labels = data_preprocess.split_data(data, 0.75)
 
 
 def model():
@@ -51,7 +51,7 @@ def model():
     loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=output, labels=one_hot_labels)
     cost = tf.reduce_mean(loss)
 
-    optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
     return X, Y, loss, cost, optimizer, output
 
