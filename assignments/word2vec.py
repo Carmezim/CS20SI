@@ -13,7 +13,7 @@ EMBED_SIZE = 128
 BATCH_SIZE = 128
 SKIP_WINDOW = 1 # context window
 NUM_SAMPLED = 64 # negative samples to sample
-NUM_TRAIN_STEPS = 20000
+NUM_TRAIN_STEPS = 200000
 LEARNING_RATE = 1.0
 WEIGHTS_FLD = "processed/"
 SKIP_STEP = 2000 # for loss print
@@ -86,7 +86,7 @@ class SkipGram:
             tf.summary.scalar("loss", self.loss)
             tf.summary.histogram("histogram loss", self.loss)
             # merge all summaries
-            tf.summary_op = tf.summary.merge_all()
+            self.summary_op = tf.summary.merge_all()
 
     # assemble graph
     def build_graph(self):
