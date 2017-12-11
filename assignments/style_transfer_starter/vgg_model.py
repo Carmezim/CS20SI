@@ -42,7 +42,7 @@ def _conv2d_relu(vgg_layers, prev_layer, layer, layer_name):
     Hint for choosing strides size: 
         for small images, you probably don't want to skip any pixel
     """
-    with tf.VariableScope(layer_name):
+    with tf.variable_scope(layer_name):
         W, b = _weights(vgg_layers, layer, layer_name)
         W = tf.constant(W, name="weights")
         b = tf.constant(b, name="bias")
