@@ -9,7 +9,6 @@ http://web.stanford.edu/class/cs20si/assignments/a2.pdf
 from __future__ import print_function
 
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import time
 
 import numpy as np
@@ -58,9 +57,9 @@ EXPECTED_BYTES = 534904783
 def _create_content_loss(p, f):
     """ Calculate the loss between the feature representation of the
     content image and the generated image.
-    
-    Inputs: 
-        p, f are just P, F in the paper 
+
+    Inputs:
+        p, f are just P, F in the paper
         (read the assignment handout if you're confused)
         Note: we won't use the coefficient 0.5 as defined in the paper
         but the coefficient as defined in the assignment handout.
@@ -69,8 +68,8 @@ def _create_content_loss(p, f):
 
     """
     # product of the dimension of P
-    s = tf.reduce_prod(tf.shape(p))
-    coef = 1 / 4 * s
+    s = tf.reduce_prod(p.size)
+    coef = 0.25 * s
     # Sum of the squared difference of F and P with new coefficient (1/4s)
     # to assist convergence replacing paper's MSE
     return tf.reduce_sum(tf.squared_difference(f, p)) * coef
@@ -100,7 +99,9 @@ def _single_style_loss(a, g):
     M = a.shape[1] * a.shape[2]
     # 1/ ((2 * N * M) ** 2)
     coef = 1 / (tf.square(N) * tf.square(M) * 4)
-    return tf.reduce_sum(tf.squared_difference(g, a)) * coef
+    A = _gram_matrix(a, N, M)
+    G = _gram_matrix(g, N, M)
+    return tf.reduce_sum(tf.squared_difference(G, A)) * coef
 
 def _create_style_loss(A, model):
     """ Return the total style loss
