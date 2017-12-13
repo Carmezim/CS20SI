@@ -68,7 +68,7 @@ def _create_content_loss(p, f):
 
     """
     # product of the dimension of P
-    s = tf.reduce_prod(p.size)
+    s = p.size
     coef = 0.25 * s
     # Sum of the squared difference of F and P with new coefficient (1/4s)
     # to assist convergence replacing paper's MSE
@@ -98,10 +98,11 @@ def _single_style_loss(a, g):
     # height times width
     M = a.shape[1] * a.shape[2]
     # 1/ ((2 * N * M) ** 2)
-    coef = 1 / (tf.square(N) * tf.square(M) * 4)
+    #coef = 1 / tf.square(N * M * 2)
     A = _gram_matrix(a, N, M)
     G = _gram_matrix(g, N, M)
-    return tf.reduce_sum(tf.squared_difference(G, A)) * coef
+    #return tf.reduce_sum(tf.squared_difference(G, A) / tf.square(2 * N * M))
+    return tf.reduce_sum((G - A) ** 2 / ((2 * N * M) ** 2))
 
 def _create_style_loss(A, model):
     """ Return the total style loss
@@ -111,7 +112,7 @@ def _create_style_loss(A, model):
     
     ###############################
     ## TO DO: return total style loss
-    return tf.reduce_sum(tf.matmul(W, E))
+    return tf.reduce_sum(tf.tensordot(W, E, axes=1))
     #return sum([W[i] * E[i] for i in range(n_layers)])
     ###############################
 
